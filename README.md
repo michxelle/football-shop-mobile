@@ -58,3 +58,34 @@ Dalam metode build(), BuildContext digunakan sebagai parameter agar widget dapat
 Hot reload adalah fitur di Flutter yang memungkinkan developer melihat perubahan kode secara langsung tanpa harus menjalankan ulang seluruh aplikasi. Saat kita melakukan hot reload, Flutter hanya memperbarui bagian kode yang berubah dan mempertahankan state aplikasi saat ini. Fitur ini sangat berguna untuk mempercepat proses pengembangan, terutama ketika kita ingin menyesuaikan tampilan atau memperbaiki logika kecil tanpa kehilangan data yang sedang berjalan.
 
 Sementara itu, hot restart juga memuat ulang aplikasi, tetapi berbeda dengan hot reload karena ia menghapus seluruh state aplikasi dan memulai ulang dari awal. Semua variabel, data, atau kondisi sementara yang tersimpan akan hilang.
+
+## TUGAS 8
+
+**Jelaskan perbedaan antara `Navigator.push()` dan `Navigator.pushReplacement()` pada Flutter. Dalam kasus apa sebaiknya masing-masing digunakan pada aplikasi Football Shop kamu?**  
+`Navigator.push()` menambahkan halaman baru ke atas stack navigasi sehingga pengguna bisa kembali ke halaman sebelumnya dengan tombol back. Contohnya, saat menekan tombol "Create Product" di halaman utama, aplikasi menggunakan `Navigator.push()` agar user bisa kembali ke halaman utama setelah selesai mengisi form.
+
+`Navigator.pushReplacement()` mengganti halaman saat ini dengan halaman baru sehingga halaman sebelumnya dihapus dari stack dan tidak bisa kembali dengan tombol back. Pada aplikasi Football Shop, ini digunakan pada navigasi drawer (misal: Home, All Products, My Products) agar saat berpindah halaman, user tidak bisa kembali ke halaman sebelumnya dengan tombol back, sehingga navigasi lebih konsisten dan tidak menumpuk banyak halaman di stack.
+
+**Bagaimana kamu memanfaatkan hierarchy widget seperti `Scaffold`, `AppBar`, dan `Drawer` untuk membangun struktur halaman yang konsisten di seluruh aplikasi?**  
+Setiap halaman utama di aplikasi Football Shop menggunakan `Scaffold` sebagai struktur dasar, yang menyediakan slot untuk `AppBar` di bagian atas dan `Drawer` di samping kiri. Dengan cara ini, semua halaman memiliki tampilan dan navigasi yang konsisten. `AppBar` digunakan untuk menampilkan judul aplikasi atau halaman, sedangkan `Drawer` berisi menu navigasi ke halaman utama, daftar produk, produk saya, dan form tambah produk. Hierarki ini memastikan user experience yang seragam di seluruh aplikasi.
+
+**Dalam konteks desain antarmuka, apa kelebihan menggunakan layout widget seperti `Padding`, `SingleChildScrollView`, dan `ListView` saat menampilkan elemen-elemen form? Berikan contoh penggunaannya dari aplikasi kamu.**  
+* `Padding` digunakan untuk memberi jarak antar elemen agar tampilan lebih rapi dan tidak saling menempel. Contohnya, setiap field pada form tambah produk dibungkus dengan `Padding` agar mudah dibaca dan diisi.  
+* `SingleChildScrollView` memungkinkan seluruh form di-scroll jika konten melebihi tinggi layar, sehingga user tetap bisa mengakses semua field meski layar kecil atau form panjang.  
+* `ListView` cocok untuk menampilkan daftar data yang dinamis dan panjang, misal daftar produk atau drawer menu yang bisa di-scroll.
+
+Contohnya, pada halaman tambah produk, `SingleChildScrollView` membungkus seluruh form sehingga user bisa scroll ke bawah untuk mengisi semua field tanpa kehilangan akses ke bagian atas form. Selain itu, `Padding` digunakan di sekitar setiap `TextFormField` untuk memberikan jarak yang nyaman.
+
+`ListView` digunakan di drawer untuk menampilkan menu navigasi yang bisa di-scroll jika ada banyak item.
+
+**Bagaimana kamu menyesuaikan warna tema agar aplikasi Football Shop memiliki identitas visual yang konsisten dengan brand toko?**  
+Untuk memastikan identitas visual Football Shop konsisten dengan brand toko, saya melakukan penyesuaian warna tema aplikasi dengan cara berikut:
+
+1. **Mengatur warna utama (primarySwatch) menjadi hijau** di `main.dart` menggunakan `ThemeData`:
+	- `colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.green)`
+	- AppBar, tombol, dan elemen utama menggunakan warna hijau agar sesuai dengan warna khas Football Shop
+2. **Menyesuaikan warna pada komponen UI**:
+	- Drawer header diberi background hijau, body drawer putih
+	- Icon dan teks pada navigasi drawer dan tombol produk diatur menjadi hijau
+3. **Menggunakan Theme.of(context) untuk konsistensi**:
+	- Semua widget yang mendukung tema mengambil warna dari `Theme.of(context)` agar perubahan tema otomatis diterapkan ke seluruh aplikasi.
