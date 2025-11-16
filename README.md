@@ -89,3 +89,40 @@ Untuk memastikan identitas visual Football Shop konsisten dengan brand toko, say
 	- Icon dan teks pada navigasi drawer dan tombol produk diatur menjadi hijau
 3. **Menggunakan Theme.of(context) untuk konsistensi**:
 	- Semua widget yang mendukung tema mengambil warna dari `Theme.of(context)` agar perubahan tema otomatis diterapkan ke seluruh aplikasi.
+
+# TUGAS 9
+
+**Jelaskan mengapa kita perlu membuat model Dart saat mengambil/mengirim data JSON? Apa konsekuensinya jika langsung memetakan Map<String, dynamic> tanpa model (terkait validasi tipe, null-safety, maintainability)?**  
+Model Dart membantu memastikan tipe data yang diterima dan dikirim sudah sesuai, sehingga lebih aman dari error runtime. Null-safety juga lebih terjaga, jadi aplikasi tidak mudah crash jika data tidak sesuai. Kode yang memakai model lebih mudah dipelihara dan dikembangkan. Jika hanya memakai Map tanpa model, validasi tipe data jadi sulit, rawan error, dan kode sulit dibaca serta diperbaiki.
+
+**Apa fungsi package http dan CookieRequest dalam tugas ini? Jelaskan perbedaan peran http vs CookieRequest.**  
+http dipakai untuk komunikasi HTTP biasa, seperti mengambil data publik dari backend. CookieRequest digunakan untuk komunikasi yang butuh autentikasi, seperti login, mengambil data user, atau menambah produk. http tidak menyimpan session, sedangkan CookieRequest menyimpan dan mengirim session agar user tetap login.
+
+**Jelaskan mengapa instance CookieRequest perlu untuk dibagikan ke semua komponen di aplikasi Flutter.**  
+Instance CookieRequest perlu dibagikan ke semua komponen agar status autentikasi user (login/logout) konsisten di seluruh aplikasi. Dengan begitu, setiap halaman bisa mengakses informasi login user dan melakukan request yang memerlukan autentikasi tanpa harus membuat instance baru, sehingga memudahkan pengelolaan session dan data user.
+
+**Jelaskan konfigurasi konektivitas yang diperlukan agar Flutter dapat berkomunikasi dengan Django. Mengapa kita perlu menambahkan 10.0.2.2 pada ALLOWED_HOSTS, mengaktifkan CORS dan pengaturan SameSite/cookie, dan menambahkan izin akses internet di Android? Apa yang akan terjadi jika konfigurasi tersebut tidak dilakukan dengan benar?**  
+Flutter perlu bisa akses backend Django, jadi ALLOWED_HOSTS harus ditambah 10.0.2.2 agar emulator Android bisa terhubung ke localhost. CORS perlu diaktifkan supaya Flutter bisa kirim request ke Django. Pengaturan SameSite dan cookie harus benar agar session login bisa tersimpan. Di Android, izin akses internet harus diaktifkan agar aplikasi bisa terhubung ke backend. Jika konfigurasi salah, aplikasi tidak bisa login, ambil data, atau kirim data ke Django.
+
+**Jelaskan mekanisme pengiriman data mulai dari input hingga dapat ditampilkan pada Flutter.**  
+User mengisi form di Flutter, data dikirim ke Django lewat request. Django memproses dan membalas data dalam format JSON. Flutter menerima data, mengubahnya ke model Dart, lalu menampilkan di layar.
+
+**Jelaskan mekanisme autentikasi dari login, register, hingga logout. Mulai dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.**  
+User mengisi data akun di Flutter, data dikirim ke Django untuk register atau login. Django memproses dan membuat session login. Setelah login sukses, Flutter menyimpan status login dan menampilkan menu utama. Logout dilakukan dengan menghapus session di backend dan mengubah status login di Flutter.
+
+**Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial).**  
+- Membuat aplikasi Django baru (authentication)
+- Mendefinisikan fungsi register_flutter, login_flutter, dan logout_flutter.
+- Mendaftarkan ketiga view di atas ke dalam path khusus /auth/register/, /auth/login/, dan /auth/logout/
+- Mengubah fungsi onPressed pada tombol Login
+- Menggunakan request.postJson() untuk memanggil endpoint /auth/login/
+- Memperbarui logika penanganan response untuk memeriksa response["status"] == "success" dan menampilkan pesan dari Django
+- Mengubah fungsi onPressed pada tombol Register
+- Menggunakan request.postJson() untuk memanggil endpoint /auth/register/
+- Memperbarui logika penanganan response untuk memeriksa response["status"] == "success" dan menavigasi kembali ke login
+- Memperbarui onTap pada ListTile "Logout"
+- Menggunakan request.logout() untuk memanggil endpoint /auth/logout/
+- Memperbarui logika penanganan response untuk memeriksa response["status"] dan menavigasi ke LoginPage setelah logout berhasil
+- Menambahkan item menu "Logout" ke Home
+- Memperbarui widget ItemCard untuk menerima CookieRequest
+- Menambahkan logika onTap di ItemCard khusus untuk "Logout" yang memanggil fungsi request.logout() dan menangani navigasi pop ke LoginPage

@@ -9,6 +9,7 @@ class MyHomePage extends StatelessWidget {
     ItemHomepage("All Products", Icons.list_alt),
     ItemHomepage("My Products", Icons.person),
     ItemHomepage("Create Product", Icons.add_box),
+    ItemHomepage("Logout", Icons.logout),
   ];
 
   @override
@@ -22,7 +23,7 @@ class MyHomePage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: Color(0xFF228B22),
       ),
       drawer: LeftDrawer(),
       body: Padding(

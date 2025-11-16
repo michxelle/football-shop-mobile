@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:football_shop/screens/menu.dart';
+import 'package:football_shop/screens/product_list.dart';
 import 'package:football_shop/screens/productlist_form.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:football_shop/screens/login.dart';
+
+const Color footballShopPrimaryColor = Color(0xFF228B22);
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -8,85 +14,117 @@ class LeftDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Container(
-        color: Colors.white,
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(
-                color: Colors.green,
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    'Footballed Co.',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
+      child: ListView(
+        children: [
+          const DrawerHeader(
+            decoration: BoxDecoration(color: footballShopPrimaryColor),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Footballed Co.',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
-                  Padding(padding: EdgeInsets.all(10)),
-                  Text(
-                    "The best football shop in town!",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontSize: 15,
-                      color: Colors.white,
-                      fontWeight: FontWeight.normal,
-                    ),
+                ),
+                Padding(padding: EdgeInsets.all(10)),
+                Text(
+                  "Find all your football gear here!",
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: Colors.white,
+                    fontWeight: FontWeight.normal,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            // Home
-            ListTile(
-              leading: Icon(Icons.home_outlined, color: Colors.green),
-              title: Text('Home', style: TextStyle(color: Colors.green)),
-              onTap: () {
-                Navigator.pushReplacement(
+          ),
+          ListTile(
+            leading: const Icon(Icons.home, color: footballShopPrimaryColor),
+            title: const Text(
+              'Home',
+              style: TextStyle(color: footballShopPrimaryColor),
+            ),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => MyHomePage()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.shopping_basket,
+              color: footballShopPrimaryColor,
+            ),
+            title: const Text(
+              'All Products',
+              style: TextStyle(color: footballShopPrimaryColor),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductPage(filterUser: false),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.person_pin,
+              color: footballShopPrimaryColor,
+            ),
+            title: const Text(
+              'My Products',
+              style: TextStyle(color: footballShopPrimaryColor),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductPage(filterUser: true),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.add_box, color: footballShopPrimaryColor),
+            title: Text(
+              'Create Product',
+              style: TextStyle(color: footballShopPrimaryColor),
+            ),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductListForm(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.logout, color: footballShopPrimaryColor),
+            title: Text(
+              'Logout',
+              style: TextStyle(color: footballShopPrimaryColor),
+            ),
+            onTap: () async {
+              final request = Provider.of<CookieRequest>(context, listen: false);
+              await request.logout("http://localhost:8000/auth/logout/");
+              request.loggedIn = false;
+              if (context.mounted) {
+                Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                  (route) => false,
                 );
-              },
-            ),
-            // All Products
-            ListTile(
-              leading: Icon(Icons.list_alt, color: Colors.green),
-              title: Text('All Products', style: TextStyle(color: Colors.green)),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
-                );
-              },
-            ),
-            // My Products
-            ListTile(
-              leading: Icon(Icons.person, color: Colors.green),
-              title: Text('My Products', style: TextStyle(color: Colors.green)),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyHomePage()),
-                );
-              },
-            ),
-            // Create Product
-            ListTile(
-              leading: Icon(Icons.add_box, color: Colors.green),
-              title: Text('Create Product', style: TextStyle(color: Colors.green)),
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ProductListForm()),
-                );
-              },
-            ),
-          ],
-        ),
+              }
+            },
+          ),
+        ],
       ),
     );
   }
